@@ -67,15 +67,29 @@ export function Contact() {
 
           <div className="reveal rounded-lg p-8" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-light)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
             <h3 className="text-2xl font-normal mb-6" style={{ fontFamily: "'Playfair Display', serif", color: 'var(--text-heading)' }}>Get The Scoop</h3>
-            <form className="space-y-5">
+            <form 
+              className="space-y-5" 
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                const name = formData.get('name') || '';
+                const brand = formData.get('brand') || '';
+                const message = formData.get('message') || '';
+                
+                const subject = encodeURIComponent(`New Inquiry from ${name} (${brand})`);
+                const body = encodeURIComponent(`Name: ${name}\nBrand/Company: ${brand}\n\nMessage:\n${message}`);
+                
+                window.location.href = `mailto:hopesofficialmusic@gmail.com?subject=${subject}&body=${body}`;
+              }}
+            >
               {[
-                { id: 'name', label: 'NAME', type: 'text', placeholder: 'Your name' },
-                { id: 'email', label: 'EMAIL', type: 'email', placeholder: 'your.email@example.com' },
-                { id: 'brand', label: 'BRAND / COMPANY', type: 'text', placeholder: 'Your brand or project name' },
-              ].map(({ id, label, type, placeholder }) => (
+                { id: 'name', name: 'name', label: 'NAME', type: 'text', placeholder: 'Your name', required: true },
+                { id: 'email', name: 'email', label: 'EMAIL', type: 'email', placeholder: 'your.email@example.com', required: true },
+                { id: 'brand', name: 'brand', label: 'BRAND / COMPANY', type: 'text', placeholder: 'Your brand or project name', required: false },
+              ].map(({ id, name, label, type, placeholder, required }) => (
                 <div key={id}>
                   <label htmlFor={id} className="block text-[0.65rem] mb-1.5" style={{ color: 'var(--text-muted)', letterSpacing: '0.12em' }}>{label}</label>
-                  <input type={type} id={id} placeholder={placeholder}
+                  <input type={type} id={id} name={name} placeholder={placeholder} required={required}
                     className="w-full px-4 py-3 rounded-lg text-sm outline-none transition-all duration-200"
                     style={{ background: 'var(--bg-input)', border: '1px solid var(--border-light)', color: 'var(--text-heading)' }}
                     onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--accent-gold)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(197,160,89,0.1)'; }}
@@ -84,7 +98,7 @@ export function Contact() {
               ))}
               <div>
                 <label htmlFor="message" className="block text-[0.65rem] mb-1.5" style={{ color: 'var(--text-muted)', letterSpacing: '0.12em' }}>TELL US ABOUT YOUR PROJECT</label>
-                <textarea id="message" rows={4} placeholder="What kind of music are you looking for?"
+                <textarea id="message" name="message" rows={4} placeholder="What kind of music are you looking for?" required
                   className="w-full px-4 py-3 rounded-lg text-sm outline-none resize-none transition-all duration-200"
                   style={{ background: 'var(--bg-input)', border: '1px solid var(--border-light)', color: 'var(--text-heading)' }}
                   onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--accent-gold)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(197,160,89,0.1)'; }}
